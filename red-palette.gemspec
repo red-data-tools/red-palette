@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.test_files += Dir.glob("test/**/*")
 
   spec.add_dependency("red-colors")
+  spec.add_dependency("numo-narray")
 
   spec.add_development_dependency("bundler")
   spec.add_development_dependency("rake")
