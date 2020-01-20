@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - ubuntu-latest
+        - macos-latest
+        - windows-latest
+        ruby_version:
+        - 2.7
+        - 2.6
+        - 2.5
+        - 2.4
+        - jruby
+        - truffleruby
+
+    steps:
+    - name: Setup Ruby
+      uses: eregon/use-ruby-action@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - name: Install bundler
+      if: contains('2.4 2.5', matrix.ruby_version)
+      run: |
+        gem install bundler
+
+    - name: Test with c_ext
+      if: (!contains('jruby truffleruby', matrix.ruby_version))
+      run: |
+        bundle install --with=c_ext
+        bundle exec rake
+
+    - name: Test without c_ext
+      run: |
+        bundle install --without=c_ext
+        bundle exec rake
+
