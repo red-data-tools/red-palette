@@ -1,5 +1,4 @@
 require "colors"
-require "numo/narray"
 
 require_relative "palette/constants"
 require_relative "palette/colors"
@@ -40,7 +39,7 @@ class Palette
         # Use all colors in a qualitative palette or 6 of another kind
         n_colors ||= QUAL_PALETTE_SIZES.fetch(palette, 6)
         case @name
-        when SEABORN_PALETTES.method(:has_key?)
+        when SEABORN_PALETTES.method(:has_key?).to_proc # NOTE: to_proc needs for Ruby 2.4
           palette = self.class.seaborn_colors(@name)
         when "hls", "HLS", "hsl", "HSL"
           palette = self.class.hsl_colors(n_colors)
