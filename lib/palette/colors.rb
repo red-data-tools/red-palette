@@ -1,3 +1,5 @@
+require_relative "helper"
+
 class Palette
   def self.seaborn_colors(name)
     SEABORN_PALETTES[name].map do |hex_string|
@@ -19,10 +21,12 @@ class Palette
   # @return [Array<Colors::HSL>]
   #   The array of colors
   def self.hsl_colors(n_colors=6, h: 3.6r, s: 0.65r, l: 0.6r)
-    hues = Numo::DFloat.linspace(0, 1, n_colors + 1)[0...-1]
-    hues.inplace + (h/360r).to_f
-    hues.inplace % 1
-    hues.inplace - Numo::Int32.cast(hues)
+    hues = Helper.linspace(0, 1, n_colors + 1)[0...-1]
+    hues.each_index do |i|
+      hues[i] += (h/360r).to_f
+      hues[i] %= 1
+      hues[i] -= hues[i].to_i
+    end
     (0...n_colors).map {|i| Colors::HSL.new(hues[i]*360r, s, l) }
   end
 
@@ -40,10 +44,12 @@ class Palette
   # @return [Array<Colors::HSL>]
   #   The array of colors
   def self.husl_colors(n_colors=6, h: 3.6r, s: 0.9r, l: 0.65r)
-    hues = Numo::DFloat.linspace(0, 1, n_colors + 1)[0...-1]
-    hues.inplace + (h/360r).to_f
-    hues.inplace % 1
-    hues.inplace * 359
+    hues = Helper.linspace(0, 1, n_colors + 1)[0...-1]
+    hues.each_index do |i|
+      hues[i] += (h/360r).to_f
+      hues[i] %= 1
+      hues[i] *= 359
+    end
     (0...n_colors).map {|i| Colors::HUSL.new(hues[i], s, l) }
   end
 

@@ -1,5 +1,4 @@
 require "colors"
-require "numo/narray"
 
 require_relative "palette/constants"
 require_relative "palette/colors"
