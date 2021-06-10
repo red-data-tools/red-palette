@@ -95,6 +95,23 @@ class Palette
     @palette.dup
   end
 
+  def to_iruby
+    ["image/svg", to_svg]
+  end
+
+  def to_svg
+    w = 55
+    n = n_colors
+    svg = %Q[<svg width="#{n*w}" height="#{w}">]
+    @colors.each_with_index do |color, i|
+      hex = color.to_rgb.to_hex_string
+      svg << %Q[<rect x="#{i*w}" y="0" width="#{w}" height="#{w}" style="fill:#{hex};]
+      svg << %Q[stroke-width:2;stroke:rgb(255,255,255)"/>]
+    end
+    svg << %Q[</svg>]
+    svg
+  end
+
   private def normalize_palette_name(palette)
     case palette
     when String
