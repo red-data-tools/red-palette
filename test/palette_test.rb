@@ -122,8 +122,26 @@ class PaletteTest < Test::Unit::TestCase
     end
   end
 
-  test(".cubehelix_colors") do
-    omit("Not implemented yet")
+  sub_test_case(".cubehelix_colors") do
+    data do
+      expected = [
+        Colors::RGBA.new(0.9312692223325372r,  0.8201921796082118r,  0.7971480974663592r,  1.0r),
+        Colors::RGBA.new(0.8559578605899612r,  0.6418993116910497r,  0.6754191211563135r,  1.0r),
+        Colors::RGBA.new(0.739734329496642r,   0.4765280683170713r,  0.5959617419736206r,  1.0r),
+        Colors::RGBA.new(0.57916573903086r,    0.33934576125314425r, 0.5219003947563425r,  1.0r),
+        Colors::RGBA.new(0.37894937987024996r, 0.2224702044652721r,  0.41140014301575434r, 1.0r),
+        Colors::RGBA.new(0.1750865648952205r,  0.11840023306916837r, 0.24215989137836502r, 1.0r)
+      ]
+      expected.map.with_index { |color, i|
+        ["colors[#{i}]", {i: i, expected_color: color}]
+      }.to_h
+    end
+    test("default parameters") do |data|
+      i, expected_color = data.values_at(:i, :expected_color)
+      colors = Palette.cubehelix_colors()
+      assert_near(expected_color,
+                  colors[i])
+    end
   end
 
   sub_test_case(".matplotlib_colors") do

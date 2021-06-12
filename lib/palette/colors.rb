@@ -53,10 +53,30 @@ class Palette
     (0...n_colors).map {|i| Colors::HUSL.new(hues[i], s, l) }
   end
 
-  def self.cubehelix_colors(n_colors, start=0, rot=0.4r, gamma=1.0r, hue=0.8r,
-                             light=0.85r, dark=0.15r, reverse=false, as_cmap: false)
-    raise NotImplementedError,
-          "Cubehelix palette has not been implemented"
+  def self.cubehelix_colors(n_colors=6, start: 0, rot: 0.4r, gamma: 1.0r, hue: 0.8r,
+                             light: 0.85r, dark: 0.15r, reverse: false)
+    get_color_function = ->(p0, p1) do
+      color = -> (x) do
+        xg = x ** gamma
+        a = hue * xg * (1 - xg) / 2
+        phi = 2 * Math::PI * (start / 3 + rot * x)
+        return xg + a * (p0 * Math.cos(phi) + p1 * Math.sin(phi))
+      end
+      return color
+    end
+
+    segmented_data = {
+      red:   get_color_function.(-0.14861, 1.78277),
+      green: get_color_function.(-0.29227, -0.90649),
+      blue:  get_color_function.(1.97294, 0.0),
+    }
+
+    cmap = Colors::LinearSegmentedColormap.new("cubehelix", segmented_data)
+
+    x = Helper.linspace(light, dark, n_colors)
+    pal = cmap[x]
+    pal.reverse! if reverse
+    pal
   end
 
   def self.matplotlib_colors(name, n_colors=6)

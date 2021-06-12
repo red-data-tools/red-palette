@@ -70,6 +70,42 @@ class Palette
     @desaturate_factor = desaturate_factor
   end
 
+  private def parse_cubehelix_args(str)
+    if str.start_with?("ch:")
+      str = str[3..-1]
+    end
+    if str.end_with?("_r")
+      reverse = true
+      str = str[0..-3]
+    else
+      reverse = false
+    end
+    if str.empty?
+      return [], {reverse: reverse}
+    end
+
+    short_key_map = {
+      "s" => :start, "r" => :rot,   "g" => :gamma,
+      "h" => :hue,   "l" => :light, "d" => :dark
+    }
+
+    all_args = str.split(",")
+    args, kwargs = [], {}
+    all_args.each do |a|
+      if a.include? "="
+        key, value = a.split("=")
+        key = short_key_map.fetch(key.strip, key).to_sym
+        kwargs[key] = Float(value.strip)
+      else
+        args << Float(a.strip)
+      end
+    end
+
+    kwargs[:reverse] = true if reverse
+
+    return args, kwargs
+  end
+
   attr_reader :name, :colors, :desaturate_factor
 
   def n_colors
@@ -88,15 +124,15 @@ class Palette
   end
 
   def [](i)
-    @palette[i % n_colors]
+    @colors[i % n_colors]
   end
 
-  def to_colormap
-    Colors::ListedColormap.new(colors)
+  def to_colormap(n=self.n_colors)
+    Colors::ListedColormap.new(colors, n_colors: n)
   end
 
   def to_ary
-    @palette.dup
+    @colors.dup
   end
 
   def to_iruby
