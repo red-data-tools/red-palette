@@ -147,4 +147,20 @@ class PaletteTest < Test::Unit::TestCase
     assert_near(Colors::HSLA.new(120r, 0.8r, 0.5r, 0x99/255r).to_rgba,
                 desaturated_colors[1])
   end
+
+  test("to_colormap") do
+    cmap = Palette.new(["#ff0000", "#00ff00", "#0000ff"]).to_colormap
+    assert_equal([
+                   Colors::ListedColormap,
+                   "#ff0000ff",
+                   "#00ff00ff",
+                   "#0000ffff"
+                 ],
+                 [
+                   cmap.class,
+                   cmap[0].to_hex_string,
+                   cmap[1].to_hex_string,
+                   cmap[2].to_hex_string
+                 ])
+  end
 end

@@ -91,6 +91,10 @@ class Palette
     @palette[i % n_colors]
   end
 
+  def to_colormap
+    Colors::ListedColormap.new(colors)
+  end
+
   def to_ary
     @palette.dup
   end

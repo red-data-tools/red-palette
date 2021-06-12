@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.files += Dir.glob("doc/text/*")
   spec.test_files += Dir.glob("test/**/*")
 
-  spec.add_dependency("red-colors")
+  spec.add_dependency("red-colors", ">= 0.2.0")
 
   spec.add_development_dependency("bundler")
   spec.add_development_dependency("rake")
