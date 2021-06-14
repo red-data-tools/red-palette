@@ -185,5 +185,5 @@ class Palette
     end
   end
 
-  self.default = Palette.new("deep").freeze
+  self.default = Palette.new("tab10").freeze
 end
