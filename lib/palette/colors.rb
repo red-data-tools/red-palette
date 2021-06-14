@@ -79,8 +79,43 @@ class Palette
     pal
   end
 
-  def self.matplotlib_colors(name, n_colors=6)
-    raise NotImplementedError,
-          "Matplotlib's colormap emulation has not been implemented"
+  def self.matplotlib_colors(name, n_colors=6, as_cmap: false)
+    if name.end_with?("_d")
+      sub_name = name[0..-2]
+      if sub_name.end_with?("_r")
+        reverse = true
+        sub_name = sub_name[0..-2]
+      else
+        reverse = false
+      end
+      colors = Palette.new(sub_name, 2).colors
+      colors << Colors::RGB.parse("#333333")
+      colors.reverse! if reverse
+      cmap = blend_cmap(colors, n_colors, as_cmap: true)
+    else
+      cmap = Colors::ColormapRegistry[name]
+    end
+
+    return cmap if as_cmap
+
+    bins = if MPL_QUAL_PALS.include?(name)
+             Helper.linspace(0r, 1r, MPL_QUAL_PALS[name])[0, n_colors]
+           else
+             Helper.linspace(0r, 1r, Integer(n_colors) + 2)[1...-1]
+           end
+    colors = cmap[bins]
+    return colors
+  end
+
+  def self.blend_colors(colors, n_colors=6, as_cmap: false)
+    name = "blend"
+    cmap = Colors::LinearSegmentedColormap.new_from_list(name, colors)
+    if as_cmap
+      return cmap
+    else
+      bins = Helper.linspace(0r, 1r, Integer(n_colors))
+      colors = cmap[bins]
+      return colors
+    end
   end
 end

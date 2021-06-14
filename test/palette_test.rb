@@ -146,15 +146,34 @@ class PaletteTest < Test::Unit::TestCase
 
   sub_test_case(".matplotlib_colors") do
     test("Set3") do
-      omit("Not implemented yet")
       palette = Palette.new("Set3")
       assert_equal("Set3", palette.name)
       assert_equal(Palette::QUAL_PALETTE_SIZES["Set3"],
                    palette.n_colors)
-      assert_equal(Palette::SEABORN_PALETTES["Set3"].map {|c|
-                     Colors::RGB.parse(c)
-                   },
-                   palette.colors)
+      assert_equal([
+        Colors::RGB.new(0.55294117647058827, 0.82745098039215681, 0.7803921568627451),
+        Colors::RGB.new(1.0,                 0.92941176470588238, 0.43529411764705883)
+      ],
+      [
+        palette.colors[0],
+        palette.colors[-1],
+      ])
+    end
+  end
+
+  sub_test_case("seaborn's palette") do
+    test("flare") do
+      palette = Palette.new("flare", 256)
+      assert_equal("flare", palette.name)
+      assert_equal(256, palette.n_colors)
+      assert_equal([
+        Colors::RGB.new(0.92907237, 0.68878959, 0.50411509),
+        Colors::RGB.new(0.29408557, 0.13721193, 0.38442775),
+      ],
+      [
+        palette.colors[0],
+        palette.colors[-1],
+      ])
     end
   end
 
