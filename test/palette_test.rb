@@ -3,7 +3,7 @@ class PaletteTest < Test::Unit::TestCase
 
   sub_test_case(".default") do
     test("the initial value") do
-      assert_equal(Palette.new("deep"), Palette.default)
+      assert_equal(Palette.new("tab10"), Palette.default)
     end
   end
 
