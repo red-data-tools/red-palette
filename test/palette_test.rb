@@ -177,6 +177,9 @@ class PaletteTest < Test::Unit::TestCase
     end
   end
 
+  sub_test_case(".blend_colors") do
+  end
+
   test("desaturation feature") do
     desaturated_colors = Palette.new(["#ff0000", "#00ff0099"], desaturate_factor: 0.8).colors
     assert_near(Colors::HSL.new(0, 0.8r, 0.5r).to_rgb,
