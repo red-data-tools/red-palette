@@ -16,7 +16,7 @@ $ gem install red-palette
 
 To be described later.
 
-See the [documentation](https://rubydoc.info/gems/red-colors) for now.
+See the [documentation](https://rubydoc.info/gems/red-palette) for now.
 
 ## License
 
